@@ -12,7 +12,7 @@ fi
 
 DOMAIN=`external_domain`
 
-common=/opt/sf-mta-relay/templates
+common=/opt/farm/ext/mta-relay/templates
 base=$common/$OSVER
 
 if [ -f $base/postfix.tpl ]; then
