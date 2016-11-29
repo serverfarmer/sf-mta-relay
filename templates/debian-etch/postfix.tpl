@@ -20,6 +20,8 @@ transport_maps     = hash:/etc/postfix/transport
 
 ############
 
+smtpd_banner = $myhostname ESMTP
+
 biff = no
 
 # appending .domain is the MUA's job.
