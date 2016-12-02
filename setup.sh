@@ -39,7 +39,7 @@ if [ -f $base/postfix.tpl ]; then
 	fi
 
 	echo "setting up postfix"
-	relay="`cat $map |cut -f 1 -d \" \"`"
+	relay="`cat $map |grep -v ^# |head -n 1 |cut -f 1 -d' '`"
 	cat $base/postfix.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$relay/g >/etc/postfix/main.cf
 
 	echo "setting up mail aliases"
