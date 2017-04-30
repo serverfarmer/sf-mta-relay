@@ -43,7 +43,7 @@ if [ -f $base/postfix.tpl ]; then
 	cat $base/postfix.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$relay/g >/etc/postfix/main.cf
 
 	echo "setting up mail aliases"
-	SHORT="${HOST%.*}"
+	SHORT="${HOST%%.*}"
 	cat $common/aliases-$OSTYPE.tpl |sed -e s/%%host%%/$SHORT/g -e s/%%domain%%/$DOMAIN/g >/etc/aliases
 	newaliases
 
