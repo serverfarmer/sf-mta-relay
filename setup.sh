@@ -59,9 +59,17 @@ if [ -f $base/postfix.tpl ]; then
 	touch /etc/postfix/sender_address_rewriting
 	postmap /etc/postfix/sender_address_rewriting
 
+	echo "setting up sender canonical maps"
+	touch /etc/postfix/sender_canonical
+	postmap /etc/postfix/sender_canonical
+
 	echo "setting up sender bcc notifications"
 	touch /etc/postfix/sender_bcc_notifications
 	postmap /etc/postfix/sender_bcc_notifications
+
+	echo "setting up recipient canonical maps"
+	touch /etc/postfix/recipient_canonical
+	postmap /etc/postfix/recipient_canonical
 
 	echo "setting up recipient bcc notifications"
 	touch /etc/postfix/recipient_bcc_notifications
