@@ -16,9 +16,9 @@ common=/opt/farm/ext/mta-relay/templates
 base=$common/$OSVER
 
 if [ -f $base/postfix.tpl ]; then
-	/opt/farm/ext/repos/package/install.sh postfix
-	/opt/farm/ext/repos/package/install.sh libsasl2-modules
-	/opt/farm/ext/repos/package/install.sh bsd-mailx
+	/opt/farm/ext/repos/utils/install.sh postfix
+	/opt/farm/ext/repos/utils/install.sh libsasl2-modules
+	/opt/farm/ext/repos/utils/install.sh bsd-mailx
 	save_original_config /etc/postfix/main.cf
 
 	map="/etc/postfix/sasl/passwd"
