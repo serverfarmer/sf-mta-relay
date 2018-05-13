@@ -1,4 +1,4 @@
-# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+# This Postfix configuration file is maintained by Server Farmer.
 
 myhostname = %%host%%
 myorigin = %%domain%%
@@ -20,30 +20,14 @@ recipient_canonical_maps = hash:/etc/postfix/recipient_canonical
 virtual_alias_maps       = hash:/etc/postfix/virtual_aliases
 transport_maps           = hash:/etc/postfix/transport
 
-############
-
-smtpd_banner = $myhostname ESMTP
-
 biff = no
-
-# appending .domain is the MUA's job.
 append_dot_mydomain = no
-
-# Uncomment the next line to generate "delayed mail" warnings
-#delay_warning_time = 4h
-
-# TLS parameters
-smtp_tls_session_cache_database = btree:${queue_directory}/smtp_scache
-
-# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
-# information on enabling SSL in the smtp client.
-
 mailbox_size_limit = 0
 
-# http://www.bensbits.com/2005/09/06/postfix_smtp_auth_support_for_relayhost
+smtp_tls_session_cache_database = btree:${queue_directory}/smtp_scache
+smtp_use_tls = yes
 smtp_sasl_auth_enable = yes
 smtp_sasl_password_maps = hash:/etc/postfix/sasl/passwd
 smtp_sasl_security_options = noanonymous
-smtp_use_tls = yes
 
-#smtp_sasl_mechanism_filter = plain, login
+smtpd_banner = $myhostname ESMTP
