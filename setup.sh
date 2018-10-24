@@ -5,6 +5,13 @@
 . /opt/farm/scripts/functions.dialog
 
 
+do_postmap() {
+	echo "setting up $2"
+	touch $1
+	postmap $1
+}
+
+
 if [ "$SMTP" != "true" ]; then
 	echo "install sf-mta-forwarder extension instead of sf-mta-relay"
 	exit 0
@@ -17,6 +24,8 @@ base=$common/$OSVER
 
 if [ -f $base/postfix.tpl ]; then
 	/opt/farm/ext/packages/utils/install.sh postfix libsasl2-modules bsd-mailx
+
+	oldmd5=`md5sum /etc/postfix/main.cf`
 	save_original_config /etc/postfix/main.cf
 
 	map="/etc/postfix/sasl/passwd"
@@ -39,39 +48,22 @@ if [ -f $base/postfix.tpl ]; then
 	echo "setting up postfix"
 	relay="`cat $map |grep -v ^# |head -n 1 |cut -f 1 -d' '`"
 	cat $base/postfix.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$relay/g >/etc/postfix/main.cf
+	newmd5=`md5sum /etc/postfix/main.cf`
 
 	echo "setting up mail aliases"
 	SHORT="${HOST%%.*}"
 	cat $common/aliases-$OSTYPE.tpl |sed -e s/%%host%%/$SHORT/g -e s/%%domain%%/$DOMAIN/g >/etc/aliases
 	newaliases
 
-	echo "setting up transport maps"
-	touch /etc/postfix/transport
-	postmap /etc/postfix/transport
+	do_postmap /etc/postfix/transport "transport maps"
+	do_postmap /etc/postfix/virtual_aliases "virtual aliasing"
+	do_postmap /etc/postfix/sender_address_rewriting "sender address rewriting"
+	do_postmap /etc/postfix/sender_canonical "sender canonical maps"
+	do_postmap /etc/postfix/sender_bcc_notifications "sender bcc notifications"
+	do_postmap /etc/postfix/recipient_canonical "recipient canonical maps"
+	do_postmap /etc/postfix/recipient_bcc_notifications "recipient bcc notifications"
 
-	echo "setting up virtual aliasing"
-	touch /etc/postfix/virtual_aliases
-	postmap /etc/postfix/virtual_aliases
-
-	echo "setting up sender address rewriting"
-	touch /etc/postfix/sender_address_rewriting
-	postmap /etc/postfix/sender_address_rewriting
-
-	echo "setting up sender canonical maps"
-	touch /etc/postfix/sender_canonical
-	postmap /etc/postfix/sender_canonical
-
-	echo "setting up sender bcc notifications"
-	touch /etc/postfix/sender_bcc_notifications
-	postmap /etc/postfix/sender_bcc_notifications
-
-	echo "setting up recipient canonical maps"
-	touch /etc/postfix/recipient_canonical
-	postmap /etc/postfix/recipient_canonical
-
-	echo "setting up recipient bcc notifications"
-	touch /etc/postfix/recipient_bcc_notifications
-	postmap /etc/postfix/recipient_bcc_notifications
-
-	service postfix restart
+	if [ "$oldmd5" != "$newmd5" ]; then
+		service postfix restart
+	fi
 fi
