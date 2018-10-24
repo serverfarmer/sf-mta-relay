@@ -65,5 +65,7 @@ if [ -f $base/postfix.tpl ]; then
 
 	if [ "$oldmd5" != "$newmd5" ]; then
 		service postfix restart
+	else
+		echo "skipping postfix restart, configuration has not changed"
 	fi
 fi
