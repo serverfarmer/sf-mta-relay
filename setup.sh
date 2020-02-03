@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 . /opt/farm/scripts/init
-. /opt/farm/scripts/functions.custom
 . /opt/farm/scripts/functions.install
 . /opt/farm/scripts/functions.dialog
 
@@ -17,7 +16,7 @@ if [ "$SMTP" != "true" ]; then
 	exit 0
 fi
 
-DOMAIN=`external_domain`
+DOMAIN=`/opt/farm/config/get-external-domain.sh`
 
 common=/opt/farm/ext/mta-relay/templates
 base=$common/$OSVER
