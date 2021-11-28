@@ -45,7 +45,7 @@ if [ -f $base/postfix.tpl ]; then
 	fi
 
 	echo "setting up postfix"
-	relay="`cat $map |grep -v ^# |head -n 1 |cut -f 1 -d' '`"
+	relay="`grep -v ^# $map |head -n 1 |cut -f 1 -d' '`"
 	cat $base/postfix.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$relay/g >/etc/postfix/main.cf
 	newmd5=`md5sum /etc/postfix/main.cf`
 
